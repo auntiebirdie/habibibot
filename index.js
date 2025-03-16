@@ -19,48 +19,54 @@ const client = new Client({
 client.login(process.env.DISCORD_BOT_TOKEN);
 
 client.on('ready', async () => {
-  client.sprint = {}
 
-  setInterval(function() {
-    for (let channel in client.sprint) {
-      if (client.sprint[channel]) {
-        let timeRemaining = 15 - Math.ceil((Date.now() - client.sprint[channel].message.createdTimestamp) / (60 * 1000));
+  client.guilds.fetch('1348782866355716177').then((guild) => {
+    Cron.schedule('* * * * *', () => {
+      const db = new JSONdb(`db/sprint.json`)
 
-        if (timeRemaining <= 0) {
-          client.sprint[channel].message.edit({
-            content: 'This sprint has ended.',
-            components: []
+      if (db.get('active')) {
+        guild.channels.fetch('1348800210435838023').then((channel) => {
+          channel.messages.fetch(db.get('message')).then((message) => {
+            const sprinters = db.get('sprinters');
+            let timeRemaining = 15 - Math.ceil((Date.now() - message.createdTimestamp) / (60 * 1000));
+
+            if (timeRemaining <= 0) {
+              message.edit({
+                content: 'This sprint has ended.',
+                components: []
+              });
+
+              if (sprinters.length > 0) {
+                message.reply(`All right, the sprint is over.  How did everyone do? ${client.sprint[channel].sprinters.map((sprinter) => '<@' + sprinter + '>').join(' ')}`);
+              }
+
+              db.set('active', false);
+            } else {
+              let content = `There is an ongoing sprint. ${timeRemaining % 2 == 0 ? '⌛' : '⏳'} ${timeRemaining} minute${timeRemaining == 1 ? '' : 's'}` + message.content.split('minutes').pop();
+
+              message.edit({
+                content
+              });
+            }
+          }).catch((err) => {
+            console.log(err);
+            db.set('active', false);
           });
-
-          if (client.sprint[channel].sprinters.length > 0) {
-            client.sprint[channel].message.reply(`All right, the sprint is over.  How did everyone do? ${client.sprint[channel].sprinters.map((sprinter) => '<@' + sprinter + '>').join(' ')}`);
-            client.sprint[channel] = null;
-          } else {
-            client.sprint[channel] = null;
-          }
-        } else {
-          client.sprint[channel].message.content = `There is an ongoing sprint. ${timeRemaining % 2 == 0 ? '⌛' : '⏳'} ${timeRemaining} minute${timeRemaining == 1 ? '' : 's'}` + client.sprint[channel].message.content.split('minutes').pop();
-
-          client.sprint[channel].message.edit({
-            content: client.sprint[channel].message.content
-          });
-        }
+        });
       }
-    }
-  }, 60 * 1000);
+    });
 
-  Cron.schedule('0 * * * *', () => {
-    const today = new Date()
-    const currentMonth = today.getUTCMonth()
-    const currentDay = today.getUTCDate()
-    const currentHour = today.getUTCHours()
+    Cron.schedule('0 * * * *', () => {
+      const today = new Date()
+      const currentMonth = today.getUTCMonth()
+      const currentDay = today.getUTCDate()
+      const currentHour = today.getUTCHours()
 
-    const announcementTime = 12;
+      const announcementTime = 12;
 
-    if (announcementTime == currentHour) {
-      const announcementChannel = '1348788301586366464';
+      if (announcementTime == currentHour) {
+        const announcementChannel = '1348788301586366464';
 
-      client.guilds.fetch('1348782866355716177').then(async (guild) => {
         guild.channels.fetch(announcementChannel).then((channel) => {
           guild.members.fetch().then((members) => {
             members = members.filter((member) => !member.user.bot)
@@ -86,10 +92,8 @@ client.on('ready', async () => {
         }).catch((err) => {
           console.log(err);
         })
-      }).catch((err) => {
-        console.log(err);
-      });
-    }
+      }
+    });
   });
 });
 
