@@ -1,6 +1,7 @@
 // Set up the environment.
 require('dotenv').config();
 
+const Chance = require('chance').Chance();
 const Cron = require('node-cron');
 const JSONdb = require('simple-json-db');
 
@@ -19,7 +20,6 @@ const client = new Client({
 client.login(process.env.DISCORD_BOT_TOKEN);
 
 client.on('ready', async () => {
-
   client.guilds.fetch('1348782866355716177').then((guild) => {
     Cron.schedule('* * * * *', () => {
       const db = new JSONdb(`db/sprint.json`)
@@ -37,7 +37,7 @@ client.on('ready', async () => {
               });
 
               if (sprinters.length > 0) {
-                message.reply(`All right, the sprint is over.  How did everyone do? ${client.sprint[channel].sprinters.map((sprinter) => '<@' + sprinter + '>').join(' ')}`);
+                message.reply(`All right, the sprint is over.  How did everyone do? ${sprinters.map((sprinter) => '<@' + sprinter + '>').join(' ')}`);
               }
 
               db.set('active', false);
@@ -164,8 +164,8 @@ client.on('messageCreate', async (message) => {
       "<:thinkhabibi:1349791646312562718>"
     ];
 
-    const response = responses[Math.floor(Math.random() * responses.length)];
-
-    message.reply(response);
+    message.reply({
+      content: Chance.pickone(responses)
+    });
   }
 });

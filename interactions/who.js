@@ -13,8 +13,8 @@ module.exports = async function(interaction) {
 
         interaction.reply({
           embeds: [{
-		  description: intro ? `<@${member.id}>\r\n\r\n${intro.content}` : "I can't find an intro for that member."
-	  }],
+            description: intro ? `<@${member.id}>\r\n\r\n${intro.content}` : "I can't find an intro for that member."
+          }],
           flags: 64
         });
       });

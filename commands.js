@@ -4,12 +4,13 @@ require('dotenv').config();
 const {
   REST,
   Routes
-} = require('discord.js')
+} = require('discord.js');
 
 // Creates a client for interacting with the Discord REST API.
-const rest = new REST().setToken(process.env.DISCORD_BOT_TOKEN)
+const rest = new REST().setToken(process.env.DISCORD_BOT_TOKEN);
 
 // Sends a PUT request to the Application Guild Commands endpoint of the Discord REST API.
+// These are only available on the Coffee Shop server.
 rest.put(
   Routes.applicationGuildCommands(process.env.DISCORD_APPLICATION_ID, "1348782866355716177"), {
     body: [{
@@ -101,10 +102,11 @@ rest.put(
       }]
     }]
   }
-)
+);
 
 
 // Sends a PUT request to the Application Commands endpoint of the Discord REST API.
+// These are available on every server Habibi is in.
 rest.put(
   Routes.applicationCommands(process.env.DISCORD_APPLICATION_ID), {
     body: [{
@@ -121,4 +123,4 @@ rest.put(
       }]
     }]
   }
-)
+);
