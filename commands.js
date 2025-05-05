@@ -83,8 +83,8 @@ rest.put(
         }]
       }]
     }, {
-      "name": "consent",
-      "description": "Consent to enter tbe shop.",
+      "name": "icebreaker",
+      "description": "Send an icebreaker to the lounge."
     }, {
       "name": "role",
       "description": "Create your own role."
@@ -100,6 +100,60 @@ rest.put(
         "type": 6,
         "required": true
       }]
+    }, {
+      "name": "buy",
+      "description": "Buy a drink.",
+      "options": [{
+        "name": "coffee",
+        "description": "Buy a coffee.",
+        "type": 1
+      }, {
+        "name": "tea",
+        "description": "Buy a tea.",
+        "type": 1
+      }, {
+        "name": "pastry",
+        "description": "Buy a pastry.",
+        "type": 1
+      }]
+    }, {
+      "name": "whisper",
+      "description": "Whisper a (semi) anonymous message.",
+      "type": 1
+    }, {
+      "name": "news",
+      "description": "Send a report to the News Room.",
+      "options": [{
+        "name": "report",
+        "description": "Send a report to the News Room.",
+        "type": 1
+      }]
+    }, {
+      "name": "hole",
+      "description": "Add or remove the hole lovers role.",
+      "type": 1
+    }, {
+      "name": "tarot",
+      "description": "Add or remove the Coffee Coven role.",
+      "type": 1
+    }, {
+      "name": "verify",
+      "description": "Verify a member.",
+      "type": 1,
+      "options": [{
+        "name": "member",
+        "description": "Who do you want to verify?",
+        "type": 6,
+        "required": true
+      }]
+    }, {
+      "name": "random",
+	    "description": "Generate something random.",
+	    "options": [{
+		    "name": "color",
+		    "description": "Generate a random color.",
+		    "type": 1
+	    }]
     }]
   }
 );

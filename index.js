@@ -13,7 +13,7 @@ const {
 // Creates a client for interacting with Discord.
 // See https://discordjs.guide/popular-topics/intents.html for more information on Gateway Intents.
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMembers]
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMembers, GatewayIntentBits.MessageContent]
 });
 
 // Logs in with the provided token.
@@ -62,7 +62,7 @@ client.on('ready', async () => {
       const currentDay = today.getUTCDate()
       const currentHour = today.getUTCHours()
 
-      const announcementTime = 12;
+      const announcementTime = 13;
 
       if (announcementTime == currentHour) {
         const announcementChannel = '1348788301586366464';
@@ -73,7 +73,7 @@ client.on('ready', async () => {
             let birthdayMembers = []
 
             members.each((member) => {
-              const userDb = new JSONdb(`members/${member.id}.json`)
+              const userDb = new JSONdb(`db/members/${member.id}.json`)
               const birthdayData = userDb.get('birthday')
 
               if (birthdayData && birthdayData.month == currentMonth && birthdayData.day == currentDay) {
@@ -101,10 +101,13 @@ client.on('ready', async () => {
 client.on('interactionCreate', (interaction) => {
   // If the interaction is a message component or modal submit, extract the command name from the custom id.
   if (interaction.isMessageComponent() || interaction.isModalSubmit()) {
-    let tmp = interaction.customId.split('_');
+    let tmp = interaction.customId.split('^')
+    tmp = tmp[0].split('_')
 
     interaction.commandName = tmp.shift(); // Remove the command name from the front of the tmp array
     interaction.customId = tmp.join('_'); // Put the custom ID back together, sans command name
+  } else if (interaction.isContextMenuCommand && interaction.isContextMenuCommand()) {
+    interaction.commandName = interaction.commandName.toLowerCase().replace(/\s/g, '');
   }
 
   let filePath = `interactions/${interaction.commandName}`;
@@ -123,49 +126,143 @@ client.on('interactionCreate', (interaction) => {
   require(`./${filePath}.js`)(interaction);
 });
 
-client.on('messageCreate', async (message) => {
-  if (message.author.id != client.user.id && message.mentions.users.get(client.user.id)) {
-    const responses = [
-      "Bzzt.",
-      "*Bzzt.*",
-      "Bzzt!",
-      "*Bzzt!*",
-      "Beep.",
-      "*Beep.*",
-      "Beep!",
-      "*Beep!*",
-      "Beep boop.",
-      "*Beep boop.*",
-      "Beep boop!",
-      "*Beep boop!*",
-      "(the camera lens whirrs)",
-      "(the camera lens focuses on you)",
-      "(floats away)",
-      "(floats closer)",
-      "(extends an arm to gesture wildly)",
-      "(extends an arm to gesture vaguely)",
-      "(nods)",
-      "(shakes excitedly)",
-      "(shakes no)",
-      "(shakes nervously)",
-      "(nuzzles you)",
-      "(does a barrel roll)",
-      "(somersaults)",
-      "(makes a high-pitched noise)",
-      "(makes a low-pitched noise)",
-      "(rotates slowly)",
-      "(does nothing)",
-      "<:habibi:1349791459846393907>",
-      "<:hearthabibi:1349791684892033085>",
-      "<:joyhabibi:1349791487096914081>",
-      "<:lovehabibi:1349791561445150740>",
-      "<:pensivehabibi:1349791596992004106>",
-      "<:tearhabibi:1349791526674501775>",
-      "<:thinkhabibi:1349791646312562718>"
-    ];
+client.on('guildMemberAdd', (member) => {
+  if (member.guild.id == '1348782866355716177') {
+    member.guild.channels.fetch('1348786174721785886').then((channel) => {
+      channel.send({
+        content: `*Beep boop!* Welcome to the coffee shop, <@${member.id}>!  Please check out the <#1348782867018420394> for rules and instructions on how to unlock the rest of the server.`,
+        components: [{
+          type: 1,
+          components: [{
+            type: 2,
+            style: 2,
+            label: 'Wave to say hi!',
+            custom_id: 'wave',
+            emoji: {
+              id: '1349791684892033085',
+              name: 'hearthabibi'
+            }
+          }]
+        }]
+      }).then((message) => {
+        const db = new JSONdb(`db/members/${member.id}.json`);
 
-    message.reply({
-      content: Chance.pickone(responses)
+        db.set('welcomeMessage', message.id);
+      });
     });
+  }
+});
+
+client.on('guildMemberRemove', (member) => {
+  if (member.guild.id == '1348782866355716177') {
+    const db = new JSONdb(`db/members/${member.id}.json`);
+
+    const welcomeMessageId = db.get('welcomeMessage');
+
+    if (welcomeMessageId) {
+      member.guild.channels.fetch('1348786174721785886').then((channel) => {
+        channel.messages.fetch(welcomeMessageId).then((message) => {
+          message.edit({
+            content: `*Beep boop!* <@${member.id}> has left the coffee shop. They couldn't handle our rizz!`,
+            components: [{
+              type: 1,
+              components: [{
+                type: 2,
+                style: 2,
+                label: 'Wave to say bye!',
+                custom_id: 'wave',
+                emoji: {
+                  id: '1351611525672206366',
+                  name: 'sobhabibi'
+                }
+              }]
+            }]
+          });
+        });
+      });
+    }
+  }
+});
+
+client.on('messageCreate', async (message) => {
+  if (message.author.id != client.user.id) {
+    if (message.mentions.users.get(client.user.id)) {
+      const options = [...message.content.matchAll(/^\d+\.\s(.+)$/gm)].map(match => match[1])
+
+      if (options.length > 0) {
+        message.reply({
+          content: `<:thinkhabibi:1349791646312562718> ... *Beep!*\r\n\r\n \`${Chance.pickone(options)}\` <:hearthabibi:1349791684892033085>`
+        });
+      } else {
+        const responses = [
+          "Bzzt.",
+          "*Bzzt.*",
+          "Bzzt!",
+          "*Bzzt!*",
+          "Beep.",
+          "*Beep.*",
+          "Beep!",
+          "*Beep!*",
+          "Beep boop.",
+          "*Beep boop.*",
+          "Beep boop!",
+          "*Beep boop!*",
+          "(the camera lens whirrs)",
+          "(the camera lens focuses on you)",
+          "(floats away)",
+          "(floats closer)",
+          "(extends an arm to gesture wildly)",
+          "(extends an arm to gesture vaguely)",
+          "(nods)",
+          "(shakes excitedly)",
+          "(shakes no)",
+          "(shakes nervously)",
+          "(nuzzles you)",
+          "(does a barrel roll)",
+          "(somersaults)",
+          "(makes a high-pitched noise)",
+          "(makes a low-pitched noise)",
+          "(rotates slowly)",
+          "(does nothing)",
+          "<:habibi:1349791459846393907>",
+          "<:hearthabibi:1349791684892033085>",
+          "<:joyhabibi:1349791487096914081>",
+          "<:lovehabibi:1349791561445150740>",
+          "<:pensivehabibi:1349791596992004106>",
+          "<:tearhabibi:1349791526674501775>",
+          "<:thinkhabibi:1349791646312562718>",
+          "<:partyhabibi:1351611666604757032>",
+          "<:eyehabibi:1351611495347388456>",
+          "<:sobhabibi:1351611525672206366>"
+        ];
+
+        message.reply({
+          content: Chance.pickone(responses)
+        });
+      }
+    } else {
+      if (message.guild.id == "1348782866355716177") {
+        const date = new Date();
+        const dayOfWeek = date.getDay();
+
+        if (dayOfWeek == 5 && message.content.toLowerCase().includes('fingers')) {
+          if (Chance.bool({
+              likelihood: 40
+            })) {
+            message.reply({
+              content: 'https://64.media.tumblr.com/8a7cb94ca29defc5bf4097ced1f2aca6/0884b3a5f5ea3361-02/s540x810/b77bf29ec2e0e86362d636c8a8ac9a1622db230b.gif'
+            })
+          }
+        } else if (dayOfWeek == 6 && message.content.toLowerCase().includes('saturday')) {
+          if (Chance.bool({
+              likelihood: 40
+            })) {
+            message.reply({
+              content: 'https://tenor.com/view/agent-stone-sonic-movie-stobotnik-gif-24250450'
+            });
+          }
+        }
+      }
+    }
   }
 });

@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "@google-cloud/translate": "^9.0.1",
+    "canvas": "^3.1.0",
     "chance": "^1.1.12",
     "color-name-list": "^11.5.0",
     "discord.js": "^14.18.0",

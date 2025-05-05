@@ -2,7 +2,7 @@ const JSONdb = require('simple-json-db')
 
 module.exports = function(interaction) {
   if (interaction.channel.id != "1348800210435838023") {
-    interaction.reply({
+    return interaction.reply({
       content: 'Please keep sprints to the <#1348800210435838023> channel.',
       flags: 64
     });
@@ -72,6 +72,7 @@ module.exports = function(interaction) {
         }
 
         sprinters.push(interaction.user.id);
+	      db.set('sprinters', sprinters);
         updateSprinters();
       }
     } else {
