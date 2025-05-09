@@ -1,12 +1,12 @@
 {
   "dependencies": {
     "@google-cloud/translate": "^9.0.1",
-    "canvas": "^3.1.0",
     "chance": "^1.1.12",
     "color-name-list": "^11.5.0",
     "discord.js": "^14.18.0",
     "dotenv": "^16.4.7",
     "node-cron": "^3.0.3",
-    "simple-json-db": "^2.0.0"
+    "simple-json-db": "^2.0.0",
+    "twitter-api-v2": "^1.23.0"
   }
 }

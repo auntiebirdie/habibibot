@@ -43,7 +43,7 @@ module.exports = async (interaction) => {
       interaction.guild.roles.create({
         name: roleName,
         hoist: true, // Displays roles separately on the member list.
-        position: 5,
+        position: 8,
         permissions: []
       }).then((role) => {
         // Adds the role to the user.

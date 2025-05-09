@@ -129,14 +129,6 @@ rest.put(
         "type": 1
       }]
     }, {
-      "name": "hole",
-      "description": "Add or remove the hole lovers role.",
-      "type": 1
-    }, {
-      "name": "tarot",
-      "description": "Add or remove the Coffee Coven role.",
-      "type": 1
-    }, {
       "name": "verify",
       "description": "Verify a member.",
       "type": 1,
@@ -147,13 +139,142 @@ rest.put(
         "required": true
       }]
     }, {
+      "name": "revoke",
+      "description": "Revoke a member's access to the shop.",
+      "type": 1,
+      "options": [{
+        "name": "member",
+        "description": "Whose access do you want to revoke?",
+        "type": 6,
+        "required": true
+      }]
+    }, {
       "name": "random",
-	    "description": "Generate something random.",
-	    "options": [{
-		    "name": "color",
-		    "description": "Generate a random color.",
-		    "type": 1
-	    }]
+      "description": "Generate something random.",
+      "options": [{
+        "name": "color",
+        "description": "Generate a random color.",
+        "type": 1
+      }, {
+        "name": "dance",
+        "description": "Summon a random dance gif.",
+        "type": 1
+      }]
+    }, {
+      "name": "toggle",
+      "description": "Toggle a pingable role.",
+      "options": [{
+        "name": "hole",
+        "description": "Toggle the hole lovers role.",
+        "type": 2,
+        "options": [{
+          "name": "lovers",
+          "description": "Toggle the hole lovers role.",
+          "type": 1
+        }]
+      }, {
+        "name": "belly",
+        "description": "Toggle the belly lovers role.",
+        "type": 2,
+        "options": [{
+          "name": "lovers",
+          "description": "Toggle the belly lovers role.",
+          "type": 1
+        }]
+      }, {
+        "name": "yuri",
+        "description": "Toggle hte yuri lovers role.",
+        "type": 2,
+        "options": [{
+          "name": "lovers",
+          "description": "Toggle the yuri lovers role.",
+          "type": 1
+        }]
+      }, {
+        "name": "coffee",
+        "description": "Toggle the coffee coven role.",
+        "type": 2,
+        "options": [{
+          "name": "coven",
+          "description": "Toggle the coffee coven role.",
+          "type": 1
+        }]
+      }, {
+        "name": "attention",
+        "description": "Toggle the attention sluts role.",
+        "type": 2,
+        "options": [{
+          "name": "sluts",
+          "description": "Toggle the attention sluts role.",
+          "type": 1
+        }]
+      }]
+    }, {
+      "name": "config",
+      "description": "Personal configuration settings.",
+      "options": [{
+        "name": "language",
+        "description": "Change your preferred language for the Translate app.",
+        "type": 1,
+        "options": [{
+          "name": "language",
+          "description": "Which language do you speak?",
+          "type": 3,
+          "required": true,
+          "choices": [{
+            "name": "English",
+            "value": "en"
+          }, {
+            "name": "Español",
+            "value": "es"
+          }, {
+            "name": "Русский",
+            "value": "ru"
+          }, {
+            "name": "Deutsch",
+            "value": "de"
+          }]
+        }]
+      }]
+    }, {
+      "name": "translate",
+      "description": "Translate messages.",
+      "options": [{
+        "name": "recent",
+        "description": "Translate the 10 most recent messages.",
+        "type": 1
+      }, {
+        "name": "text",
+        "description": "Translate your own text.",
+        "type": 1,
+        "options": [{
+          "name": "language",
+          "description": "Which language do you want to translate to?",
+          "type": 3,
+          "required": true,
+          "choices": [{
+            "name": "English",
+            "value": "en"
+          }, {
+            "name": "Español",
+            "value": "es"
+          }, {
+            "name": "Русский",
+            "value": "ru"
+          }, {
+            "name": "Deutsch",
+            "value": "de"
+          }]
+        }, {
+          "name": "message",
+          "description": "What message do you want to translate?",
+          "type": 3,
+          "required": true
+        }]
+      }]
+    }, {
+      "name": "Translate",
+      "type": 3
     }]
   }
 );

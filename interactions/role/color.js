@@ -54,7 +54,7 @@ module.exports = async (interaction) => {
         name: 'Coffee Shop Regular',
         color: roleColor,
         hoist: true, // Displays roles separately on the member list.
-        position: 5,
+        position: 8,
         permissions: []
       }).then((role) => {
         // Adds the role to the user.

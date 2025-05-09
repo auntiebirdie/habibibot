@@ -194,36 +194,11 @@ client.on('messageCreate', async (message) => {
           content: `<:thinkhabibi:1349791646312562718> ... *Beep!*\r\n\r\n \`${Chance.pickone(options)}\` <:hearthabibi:1349791684892033085>`
         });
       } else {
-        const responses = [
-          "Bzzt.",
-          "*Bzzt.*",
-          "Bzzt!",
-          "*Bzzt!*",
-          "Beep.",
-          "*Beep.*",
-          "Beep!",
-          "*Beep!*",
-          "Beep boop.",
-          "*Beep boop.*",
-          "Beep boop!",
-          "*Beep boop!*",
-          "(the camera lens whirrs)",
-          "(the camera lens focuses on you)",
-          "(floats away)",
-          "(floats closer)",
-          "(extends an arm to gesture wildly)",
-          "(extends an arm to gesture vaguely)",
-          "(nods)",
-          "(shakes excitedly)",
-          "(shakes no)",
-          "(shakes nervously)",
-          "(nuzzles you)",
-          "(does a barrel roll)",
-          "(somersaults)",
-          "(makes a high-pitched noise)",
-          "(makes a low-pitched noise)",
-          "(rotates slowly)",
-          "(does nothing)",
+        delete require.cache[require.resolve('./data/responses.json')];
+
+        const responses = require('./data/responses.json');
+
+        const emoji = [
           "<:habibi:1349791459846393907>",
           "<:hearthabibi:1349791684892033085>",
           "<:joyhabibi:1349791487096914081>",
@@ -237,7 +212,7 @@ client.on('messageCreate', async (message) => {
         ];
 
         message.reply({
-          content: Chance.pickone(responses)
+          content: Chance.pickone([...responses, ...emoji])
         });
       }
     } else {
@@ -245,17 +220,17 @@ client.on('messageCreate', async (message) => {
         const date = new Date();
         const dayOfWeek = date.getDay();
 
-        if (dayOfWeek == 5 && message.content.toLowerCase().includes('fingers')) {
+        if (message.channel.id == "1348788301586366464" && dayOfWeek == 5 && message.content.toLowerCase().includes('fingers')) {
           if (Chance.bool({
-              likelihood: 40
+              likelihood: 30
             })) {
             message.reply({
               content: 'https://64.media.tumblr.com/8a7cb94ca29defc5bf4097ced1f2aca6/0884b3a5f5ea3361-02/s540x810/b77bf29ec2e0e86362d636c8a8ac9a1622db230b.gif'
             })
           }
-        } else if (dayOfWeek == 6 && message.content.toLowerCase().includes('saturday')) {
+        } else if (message.channel.id == "1348788301586366464" && dayOfWeek == 6 && message.content.toLowerCase().includes('saturday')) {
           if (Chance.bool({
-              likelihood: 40
+              likelihood: 30
             })) {
             message.reply({
               content: 'https://tenor.com/view/agent-stone-sonic-movie-stobotnik-gif-24250450'

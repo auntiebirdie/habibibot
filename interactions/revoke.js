@@ -4,15 +4,15 @@ module.exports = async (interaction) => {
     const role = "1348788076071223386";
 
     if (targetMember.roles.resolve(role)) {
+      targetMember.roles.remove(role);
+
       interaction.reply({
-        content: `<@${targetMember.id}> already has access to the shop.`,
+        content: `You have revoked <@${targetMember.id}>'s access to the shop.`,
         flags: 64
       });
     } else {
-      targetMember.roles.add(role);
-
       interaction.reply({
-        content: `You have granted <@${targetMember.id}> access to the shop.`,
+        content: `<@${targetMember.id}> doesn't have access to the shop.`,
         flags: 64
       });
     }
