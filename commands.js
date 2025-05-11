@@ -339,6 +339,10 @@ rest.put(
         "type": 1,
         "name": "claw-machine",
         "description": "Let's play Claw Machine!"
+      }, {
+        "type": 1,
+        "name": "memory",
+        "description": "Let's play Memory!"
       }]
     }]
   }

@@ -4,6 +4,13 @@ const money = require('../../helpers/money.js');
 
 // Exports a function that is given an interaction.
 module.exports = async (interaction) => {
+            let member = interaction.member;
+
+            if (!member) {
+                    const guild = await interaction.client.guilds.fetch('1348782866355716177');
+                    member = await guild.members.fetch(interaction.user.id);
+            }
+
   // Builds an array of the three options: rock, paper, and scissors.
   const options = [{
     id: 'stone',
@@ -60,7 +67,7 @@ module.exports = async (interaction) => {
     if (userSelected.defeats == botSelected.id) {
       content += ':tada: You win! You gain 10 coins!';
       outcome = 'win';
-	    money.addCoins(interaction.member, 10);
+	    money.addCoins(member, 10);
     } else if (botSelected.defeats == userSelected.id) {
       content += ':smirk: I win!';
       outcome = 'lose';
