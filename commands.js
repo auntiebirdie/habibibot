@@ -23,7 +23,7 @@ rest.put(
         "options": [{
           "name": "month",
           "description": "Which month were you born?",
-          "type": 10,
+          "type": 4,
           "choices": [{
             "name": "January",
             "value": 0
@@ -65,7 +65,7 @@ rest.put(
         }, {
           "name": "day",
           "description": "Which day were you born?",
-          "type": 10,
+          "type": 4,
           "min_value": 1,
           "max_value": 31,
           "required": true
@@ -235,6 +235,10 @@ rest.put(
             "value": "de"
           }]
         }]
+      }, {
+        "name": "debt",
+        "description": "Toggle whether or not you want to go into debt",
+        "type": 1
       }]
     }, {
       "name": "translate",
@@ -275,6 +279,42 @@ rest.put(
     }, {
       "name": "Translate",
       "type": 3
+    }, {
+      "name": "give",
+      "description": "Give another member something.",
+      "options": [{
+        "name": "coins",
+        "description": "Give another member some coins.",
+        "type": 1,
+        "options": [{
+          "name": "member",
+          "description": "Who do you want to give coins to?",
+          "type": 6,
+          "required": true
+        }, {
+          "name": "amount",
+          "description": "How many coins do you want to give?",
+          "type": 4,
+          "required": true,
+          "min_value": 0
+        }]
+      }]
+    }, {
+      "name": "coins",
+      "description": "Check how many coins you have.",
+      "type": 1
+    }, {
+      "name": "leaderboard",
+      "description": "Check the coin leaderboards.",
+      "options": [{
+        "name": "richest",
+        "description": "Check the coin leaderboards for the richest members.",
+        "type": 1
+      }, {
+        "name": "debtest",
+        "description": "Check the coin leaderboards for the debtest members.",
+        "type": 1
+      }]
     }]
   }
 );
@@ -295,6 +335,10 @@ rest.put(
         "type": 1,
         "name": "botsweeper",
         "description": "Let's play Botsweeper!"
+      }, {
+        "type": 1,
+        "name": "claw-machine",
+        "description": "Let's play Claw Machine!"
       }]
     }]
   }

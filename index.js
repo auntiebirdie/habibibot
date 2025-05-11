@@ -7,13 +7,15 @@ const JSONdb = require('simple-json-db');
 
 const {
   Client,
-  GatewayIntentBits
+  GatewayIntentBits,
+	Partials
 } = require('discord.js');
 
 // Creates a client for interacting with Discord.
 // See https://discordjs.guide/popular-topics/intents.html for more information on Gateway Intents.
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMembers, GatewayIntentBits.MessageContent]
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMembers, GatewayIntentBits.MessageContent, GatewayIntentBits.DirectMessages],
+  partials: [Partials.Channel]
 });
 
 // Logs in with the provided token.

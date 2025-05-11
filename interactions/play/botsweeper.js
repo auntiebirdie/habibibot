@@ -1,9 +1,12 @@
 const Chance = require('chance').Chance();
 const JSONdb = require('simple-json-db');
 
+const money = require('../../helpers/money.js');
+
 module.exports = (interaction) => {
   return new Promise(async (resolve, reject) => {
     const state = new JSONdb(`db/games/botsweeper/${interaction.user.id}.json`);
+
     const embeds = [];
     const numbers = ['<:zero:1147962945670758490>', '<:one:1143953251033698436>', '<:two:1143957925409337364>', '<:three:1143960626868269097>', '<:four:1143961071867154433>', '<:five:1143961868508090534>', '<:six:1143961879648145458>', '<:seven:1144082878653792377>', '<:eight:1144083599059058748>'];
 
@@ -137,6 +140,7 @@ module.exports = (interaction) => {
     }
 
     let remainingBots = [];
+    let earnedCoins = 0;
 
     for (let i = 0, len = components.length; i < len; i++) {
       if (components[i].bot) {
@@ -145,18 +149,23 @@ module.exports = (interaction) => {
 
           if (unrevealed == 0) {
             embeds.push({
-              description: 'You successfully captured a botnik!',
+              description: 'You successfully captured a botnik! You gain 10 coins!',
               thumbnail: {
                 url: `https://cdn.discordapp.com/emojis/${components[i].bot.split(':').pop().replace(/[^0-9]/g, '')}.webp?size=96&quality=lossless`
               }
             });
 
+            earnedCoins += 10;
             components[i].revealed = true;
           } else {
             remainingBots.push(i);
           }
         }
       }
+    }
+
+    if (earnedCoins > 0) {
+	    money.addCoins(interaction.member, earnedCoins);
     }
 
     if (remainingBots.length == 0) {

@@ -1,5 +1,7 @@
 const JSONdb = require('simple-json-db');
 
+const money = require('../../helpers/money.js');
+
 // Exports a function that is given an interaction.
 module.exports = async (interaction) => {
   // Builds an array of the three options: rock, paper, and scissors.
@@ -56,8 +58,9 @@ module.exports = async (interaction) => {
 
     // Determine who won or if it was a tie.
     if (userSelected.defeats == botSelected.id) {
-      content += ':tada: You win!';
+      content += ':tada: You win! You gain 10 coins!';
       outcome = 'win';
+	    money.addCoins(interaction.member, 10);
     } else if (botSelected.defeats == userSelected.id) {
       content += ':smirk: I win!';
       outcome = 'lose';
